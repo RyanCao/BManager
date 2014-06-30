@@ -1,19 +1,25 @@
 /*******************************************************************************
- * Class name:	SharedObejctFileCookie.as
- * Description:	文件缓存
+ * Class name:	SharedObjectFileCookieWorker.as
+ * Description:	使用线程的存取类
  * Author:		Ryan
- * Create:		Jun 18, 2014 2:42:45 PM
- * Update:		Jun 18, 2014 2:42:45 PM
+ * Create:		Jun 19, 2014 2:18:20 PM
+ * Update:		Jun 19, 2014 2:18:20 PM
  ******************************************************************************/
 package org.rcSpark.tools.file
 {
+import flash.events.Event;
 import flash.net.SharedObject;
+import flash.system.MessageChannel;
+import flash.system.Worker;
+import flash.system.WorkerDomain;
+import flash.system.WorkerState;
+import flash.utils.ByteArray;
 
 //-----------------------------------------------------------------------------
 // import_declaration
 //-----------------------------------------------------------------------------
 
-public class SharedObejctFileCookie implements IFileCookie
+public class SharedObjectFileCookieWorker implements IFileCookie
 {
 	//-----------------------------------------------------------------------------
 	// Var
@@ -44,16 +50,65 @@ public class SharedObejctFileCookie implements IFileCookie
 	private var saveWaitList:Array ;
 	private var MAX_THREAD:uint = 1;
 	private var _loadingCount:uint = 0;
+	
+	/**
+	 * 线程是否初始化
+	 */	
+	private var __work_init:Boolean = false ;
+	/**
+	 * 线程运行状态
+	 * */
+	private var isSaveing:Boolean= false;
+	private var bgWorker:Worker;
+	private var saveBaChannel:MessageChannel;
+	private var saveCommandChannel:MessageChannel;
+	private var saveResultChannel:MessageChannel;
 	//-----------------------------------------------------------------------------
 	// Constructor
 	//-----------------------------------------------------------------------------
-	public function SharedObejctFileCookie()
+	public function SharedObjectFileCookieWorker()
 	{
+		bgWorker = WorkerDomain.current.createWorker(SharedObjectWorkers.BackgroundWorker);
+		
+		saveBaChannel = Worker.current.createMessageChannel(bgWorker);
+		bgWorker.setSharedProperty("saveBaChannel", saveBaChannel);
+		
+		saveCommandChannel = Worker.current.createMessageChannel(bgWorker);
+		bgWorker.setSharedProperty("saveCommandChannel", saveCommandChannel);
+		
+		saveResultChannel = bgWorker.createMessageChannel(Worker.current);
+		saveResultChannel.addEventListener(Event.CHANNEL_MESSAGE, handleResultMessage)
+		bgWorker.setSharedProperty("saveResultChannel", saveResultChannel);
+		
+		bgWorker.addEventListener(Event.WORKER_STATE, handleBGWorkerStateChange);
+		bgWorker.start();
 	}
+	private function handleBGWorkerStateChange(event:Event):void
+	{
+		if (bgWorker.state == WorkerState.RUNNING) 
+		{
+			__work_init = true ;
+			doSaveWaitList();
+		}
+	}
+	
+	private function handleResultMessage(event:Event):void
+	{
+		var _currentChannel:MessageChannel = event.currentTarget as MessageChannel ;
+		if (!_currentChannel.messageAvailable)
+			return;
+		var message:Array = _currentChannel.receive() as Array;
+		
+		isSaveing = false ;
+		//保存 索引
+		saveIndexData(message[1],message[2]);
+		doSaveWaitList();
+	}		
+	
 	public static function instance():IFileCookie
 	{
 		if(!__instance)
-			__instance = new SharedObejctFileCookie();
+			__instance = new SharedObjectFileCookieWorker();
 		return __instance ;
 	}
 	//-----------------------------------------------------------------------------
@@ -62,7 +117,7 @@ public class SharedObejctFileCookie implements IFileCookie
 	public function initIndex(domainName:String):*
 	{
 		__domainName = domainName ;
-		var _so:SharedObject = getSharedObject() ;
+		var _so:SharedObject = SharedObject.getLocal(__domainName) ;
 		indexData = _so.data[INDEX_NAME];
 		if(!indexData){
 			if(_so.data[INDEX_NAME] == null){
@@ -71,6 +126,12 @@ public class SharedObejctFileCookie implements IFileCookie
 			}
 			indexData = {};
 		}
+		
+		if(_so.data[DIR_NAME] == null){
+			_so.data[DIR_NAME] = {} ;
+			_so.flush();
+		}
+		
 		__init = true ;
 		return indexData ;
 	}
@@ -83,7 +144,7 @@ public class SharedObejctFileCookie implements IFileCookie
 	{
 		if(!__init)
 			initIndex(__domainName);
-		var _so:SharedObject = getSharedObject() ;
+		var _so:SharedObject = SharedObject.getLocal(__domainName) ;
 		_so.data[INDEX_NAME][fileName] = ver ;
 		indexData[fileName] = ver ;
 		return _so.flush();
@@ -93,9 +154,9 @@ public class SharedObejctFileCookie implements IFileCookie
 	{
 		if(!__init)
 			initIndex(__domainName);
+		var _so:SharedObject = SharedObject.getLocal(__domainName) ;
 		if(isFileExist(key,ver))
 		{
-			var _so:SharedObject = getSharedObject() ;
 			return _so.data[DIR_NAME][key];
 		}
 		return null ;
@@ -113,23 +174,25 @@ public class SharedObejctFileCookie implements IFileCookie
 	}
 	
 	private function doSaveWaitList():void{
-		if (saveWaitList.length > 0 && _loadingCount < MAX_THREAD) {
-			_loadingCount ++ ;
+		if(!__work_init){
+			//线程未初始化
+			return ;
+		}
+		if(isSaveing){
+			//线程进行中
+			return ;
+		}
+		
+		if (saveWaitList&&saveWaitList.length > 0) {
+			isSaveing = true ;
 			var saveData:Array = this.saveWaitList.shift();
 			var key:String = saveData[0];
 			var value:* = saveData[1];
 			var ver:String=saveData[2];
 			
-			var _so:SharedObject = getSharedObject() ;
-			if(_so.data[DIR_NAME] == null){
-				_so.data[DIR_NAME] = {} ;
-				_so.flush();
-			}
-			saveIndexData(key,ver);
-			_so.data[DIR_NAME][key] = value ;
-			_so.flush();
-			
-			_loadingCount -- ;
+			(value as ByteArray).shareable = true ;
+			saveBaChannel.send(value);
+			saveCommandChannel.send([key,ver]);
 		}
 	}
 	

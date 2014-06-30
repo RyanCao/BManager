@@ -372,8 +372,8 @@ public final class BinaryManager
 	private function getMd5String(ba:ByteArray,version:String = ""):String{
 		var md5String:String = version ;
 		
-		var md5:MD5Stream = new MD5Stream();
-		md5String = md5.complete(ba);
+//		var md5:MD5Stream = new MD5Stream();
+//		md5String = md5.complete(ba);
 		
 		return md5String ;
 	}
