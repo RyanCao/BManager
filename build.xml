@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="binaryManager" default="swc" basedir=".">
+
+	<!-- build.local.properties and sdk.local.proprties are optional files that
+		can be used to override the default properties. -->
+	<property file="./sdk.local.properties"/>
+	<property file="./sdk.properties"/>
+	<property file="./build.local.properties"/>
+	<property file="./build.properties"/>
+
+	<target name="swc" depends="-buildBinaryManager,-cleanup" description="builds BinaryManager.swc only"/>
+
+	<target name="docs" depends="-docs,-cleanup" description="builds API reference only"/>
+	
+	<target name="full" depends="-buildBinaryManager,-docs,-cleanup" description="builds API reference only"/>
+
+	<target name="package" depends="full" description="build everything and package a zip">
+		<zip destfile="${output.path}/binaryManager.zip">
+			<zipfileset dir="${output.path}"/>
+		</zip>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${output.path}" excludes="binaryManager.zip"/>
+		</delete>
+	</target>
+
+	<target name="-prepare">
+		<delete dir="${output.path}"/>
+	</target>
+
+	<target name="-cleanup">
+		<delete dir="${dependency.output}"/>
+	</target>
+
+	<target name="-buildBinaryManager" >
+		<echo message="Building BinaryManager.swc"/>
+		<java jar="${flex.compc}" dir="${basedir}" fork="true" failonerror="true">
+			<arg value="-load-config=${flexsdk.config}"/>
+			<arg value="-swf-version=${swf.version}"/>
+			<arg value="-source-path+=${source.root}"/>
+			<arg value="-library-path+=${libs.root}"/>
+			<arg value="-include-sources+=${source.root}"/>
+			<arg value="-output=${output.path}/BinaryManager.swc"/>
+		</java>
+	</target>
+
+	<target name="-docs">
+		<echo message="Generating API Reference"/>
+		<java jar="${flex.asdoc}" dir="${basedir}" fork="true" failonerror="true">
+			<arg value="+flexlib=${flexsdk.framework}"/>
+			<arg value="-swf-version=${swf.version}"/>
+			<arg value="-source-path+=${source.root}"/>
+			<arg value="-library-path+=${libs.root}"/>
+			<arg value="-doc-sources+=${source.root}"/>
+
+			<arg value="-compiler.fonts.local-fonts-snapshot="/>
+
+			<arg value="-main-title=BinaryManager ${version} API Reference"/>
+			<arg value="-window-title=BinaryManager"/>
+			<arg value="-footer=${footer.text}"/>
+			<arg value="-package-description-file=./package-descriptions.xml"/>
+			<arg value="-output=${docs.output}"/>
+		</java>
+	</target>
+	
+</project>

@@ -2,8 +2,6 @@ package org.osflash.async
 {	
 /**
  * 定义资源文件加载完毕后需要转换的格式 
- * @author zhangyu
- * 
  */
 public class ResFormat
 {
@@ -29,7 +27,6 @@ public class ResFormat
 	
 	/**
 	 * flash.display.Loader
-	 * 这个格式化类型主要是为了少写几个字的代码
 	 */
 	public static const LOADER:String = "loader";
 	

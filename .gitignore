@@ -3,3 +3,6 @@ bin
 .actionScriptProperties
 .flexLibProperties
 .project
+.idea
+BinaryManager.iml
+output
