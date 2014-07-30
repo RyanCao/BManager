@@ -186,7 +186,7 @@ public final class BinaryManager
 		resData.isSave = isSave ;
 		resData.state = BinaryInfo.WAITING;
 		if(TRACE_FLAG&&ilog){
-			ilog.debug("---BinaryManager--add--url--{0}",keyUrl,rUrl,versionUrl);
+			ilog.log(1,"---BinaryManager--add--url--{0}",keyUrl,rUrl,versionUrl);
 		}
 		handleBinaryInfo(resData);
 	}
@@ -300,7 +300,7 @@ public final class BinaryManager
 					loader.addEventListener(BinaryEvent.PROGRESS, onProgressHandler,false,0,true);
 				loader.load(resData.urlReq);
 				if(TRACE_FLAG&&ilog){
-					ilog.debug("---BinaryManager--startLoad--url--{0}",URLCode.encode(resData.urlReq));
+					ilog.info("---BinaryManager--startLoad--url--{0}",URLCode.encode(resData.urlReq));
 				}
 			} else {
 			}
@@ -335,12 +335,12 @@ public final class BinaryManager
 		if(ver&&ver!=""&& md5String != ver){
 			if(TRACE_FLAG&&ilog){
 				//文件不匹配
-				ilog.debug("---BinaryManager--md5numWrong----url,needmd5,itsmd5----{0},{1},{2}--",[URLCode.encode(streamInfo.urlReq),ver,md5String]);
+				ilog.error("---BinaryManager--md5numWrong----url,needmd5,itsmd5----{0},{1},{2}--",[URLCode.encode(streamInfo.urlReq),ver,md5String]);
 			}
 		}
 		
 		if(TRACE_FLAG&&ilog){
-			ilog.debug("---BinaryManager--loadComplete----url----{0}--",URLCode.encode(streamInfo.urlReq));
+			ilog.info("---BinaryManager--loadComplete----url----{0}--",URLCode.encode(streamInfo.urlReq));
 		}
 		
 		removeUrlFromLoadingList(streamInfo);
@@ -358,7 +358,7 @@ public final class BinaryManager
 			//成功加载的文件需要保存
 			ifile.saveFileData(keyUrl,streamInfo.ba,md5String);
 			if(TRACE_FLAG&&ilog){
-				ilog.debug("---BinaryManager--saveFile----url----{0}--",keyUrl);
+				ilog.info("---BinaryManager--saveFile----url----{0}--",keyUrl);
 			}
 		}
 	}
@@ -395,7 +395,7 @@ public final class BinaryManager
 		var keyUrl:String = getKeyUrl(streamInfo.url);
 		
 		if(TRACE_FLAG&&ilog){
-			ilog.debug("---BinaryManager--loadError----url----{0}--",keyUrl,streamInfo.url);
+			ilog.error("---BinaryManager--loadError----url----{0}--",keyUrl,streamInfo.url);
 		}
 		
 		if(errorDic[keyUrl]==null)

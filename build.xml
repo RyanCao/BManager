@@ -12,7 +12,7 @@
 
 	<target name="docs" depends="-docs,-cleanup" description="builds API reference only"/>
 	
-	<target name="full" depends="-buildBinaryManager,-docs,-cleanup" description="builds API reference only"/>
+	<target name="full" depends="-prepare,-buildBinaryManager,-docs,-cleanup" description="builds API reference only"/>
 
 	<target name="package" depends="full" description="build everything and package a zip">
 		<zip destfile="${output.path}/binaryManager.zip">
