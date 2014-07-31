@@ -4,5 +4,6 @@ bin
 .flexLibProperties
 .project
 .idea
-BinaryManager.iml
+*.iml
 output
+out
