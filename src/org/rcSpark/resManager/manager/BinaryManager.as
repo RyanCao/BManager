@@ -19,6 +19,7 @@ import org.rcSpark.resManager.data.BinaryInfo;
 import org.rcSpark.resManager.data.WaitToWake;
 import org.rcSpark.resManager.events.BinaryEvent;
 import org.rcSpark.resManager.loader.BinaryLoader;
+import org.rcSpark.resManager.util.MemoryMd5;
 import org.rcSpark.resManager.util.URLCode;
 import org.rcSpark.tools.file.IFileCookie;
 
@@ -330,13 +331,16 @@ public final class BinaryManager
 		var streamInfo:BinaryInfo = loader.getResData() ;
 		var keyUrl:String = getKeyUrl(streamInfo.url);
 		
-		var md5String:String = getMd5String(streamInfo.ba,streamInfo.md5sum);
+
 		var ver:String = getVersion(keyUrl);
-		if(ver&&ver!=""&& md5String != ver){
-			if(TRACE_FLAG&&ilog){
-				//文件不匹配
-				ilog.error("---BinaryManager--md5numWrong----url,needmd5,itsmd5----{0},{1},{2}--",[URLCode.encode(streamInfo.urlReq),ver,md5String]);
-			}
+		if(ver&&ver!=""){
+            var md5String:String = getMd5String(streamInfo.ba,streamInfo.md5sum);
+            if(md5String != ver){
+                if(TRACE_FLAG&&ilog){
+                    //文件不匹配
+                    ilog.error("---BinaryManager--md5numWrong----url,needmd5,itsmd5----{0},{1},{2}--",[URLCode.encode(streamInfo.urlReq),ver,md5String]);
+                }
+            }
 		}
 		
 		if(TRACE_FLAG&&ilog){
@@ -374,7 +378,7 @@ public final class BinaryManager
 		
 //		var md5:MD5Stream = new MD5Stream();
 //		md5String = md5.complete(ba);
-		
+		md5String = MemoryMd5.hashBinary(ba);
 		return md5String ;
 	}
 	
