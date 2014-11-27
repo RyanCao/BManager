@@ -49,7 +49,7 @@ public class LoaderDeferred extends Deferred
 	//--------------------------------------------------------------------------
 	//		Event Handler
 	//--------------------------------------------------------------------------
-	public function load(url:String, contentFormat:String,inDomain:Boolean=true):LoaderDeferred
+	public function load(url:String, contentFormat:String,type:int,inDomain:Boolean=true):LoaderDeferred
 	{
 		if (_success == false )
 		{
@@ -57,7 +57,7 @@ public class LoaderDeferred extends Deferred
 			this._url  =url;
 			_inDomain = inDomain ;
 			//BinaryManager.instance().rcant::load(url,0,onCompleteHandler,onProgressHandler,onErrorHandler);
-            NBinaryManager.instance().rcant::load(url,0,0,onCompleteHandler,onProgressHandler,onErrorHandler);
+            NBinaryManager.instance().rcant::load(url,type,0,onCompleteHandler,onProgressHandler,onErrorHandler);
 		}
 		return this;
 	}

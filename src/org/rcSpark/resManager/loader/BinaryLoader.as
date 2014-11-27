@@ -231,7 +231,8 @@ public class BinaryLoader extends BaseLoader {
         } else {
             //关键性资源重试
             //TODO  关键性资源重试 判断条件需要修改
-            if (_data.loadLevel == LoadLevel.LIB)
+//            if (_data.loadLevel == LoadLevel.LIB)
+            if ([LoadType.LIB,LoadType.CORE_FILES].indexOf(_data.loadType)>-1)
                 repeatLoad();
         }
     }
