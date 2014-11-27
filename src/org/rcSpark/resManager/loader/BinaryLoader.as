@@ -23,8 +23,9 @@ import flash.utils.ByteArray;
 
 import org.rcSpark.resManager.data.BinaryInfo;
 import org.rcSpark.resManager.events.BinaryEvent;
-import org.rcSpark.resManager.manager.BinaryManager;
 import org.rcSpark.tools.time.TimerManager;
+
+import tools.ILogger;
 
 public class BinaryLoader extends BaseLoader {
     //-----------------------------------------------------------------------------
@@ -59,6 +60,9 @@ public class BinaryLoader extends BaseLoader {
      * 关键性资源重试次数
      */
     public static var reloadTimesMax:int = 3;
+
+    public var TRACE_FLAG:Boolean;
+    public var ilog:ILogger;
 
     //-----------------------------------------------------------------------------
     // Constructor
@@ -144,8 +148,8 @@ public class BinaryLoader extends BaseLoader {
             //只有 在加载中才回进行  判定
             if (countTime > overTime) {
                 //超时无反应 重新加载
-                if (BinaryManager.TRACE_FLAG && BinaryManager.ilog)
-                    BinaryManager.ilog.debug("BinaryLoader timeHandle {0} {1}", _data.url)
+                if (TRACE_FLAG && ilog)
+                    ilog.debug("BinaryLoader timeHandle {0} {1}", _data.url)
                 stopLoading();
                 clearDirtyData();
                 startLoading();
@@ -215,8 +219,8 @@ public class BinaryLoader extends BaseLoader {
 
     protected function onErrorHandle(evt:ErrorEvent):void {
         // 判断是不是关键资源
-        if (BinaryManager.ilog && BinaryManager.TRACE_FLAG)
-            BinaryManager.ilog.debug("onErrorHandle: " + _data.url + _data.loadLevel + "," + _httpStatus + ", evt: " + evt);
+        if (ilog && TRACE_FLAG)
+            ilog.debug("onErrorHandle: " + _data.url + _data.loadLevel + "," + _httpStatus + ", evt: " + evt);
 
         _data.state = BinaryInfo.ERROR;
 
@@ -226,6 +230,7 @@ public class BinaryLoader extends BaseLoader {
             onFinallyErrorHandle();
         } else {
             //关键性资源重试
+            //TODO  关键性资源重试 判断条件需要修改
             if (_data.loadLevel == LoadLevel.LIB)
                 repeatLoad();
         }
@@ -235,8 +240,8 @@ public class BinaryLoader extends BaseLoader {
     override protected function onHttpStatusHandle(evt:HTTPStatusEvent):void {
         _httpStatus = evt.status;
 
-        if (BinaryManager.TRACE_FLAG && BinaryManager.ilog)
-            BinaryManager.ilog.debug("onHttpStatusHandle " + _data.urlReq.url + ", " + evt.status);
+        if (TRACE_FLAG && ilog)
+            ilog.debug("onHttpStatusHandle " + _data.urlReq.url + ", " + evt.status);
 
         if (evt.status >= 400) {
         } else if (evt.status == 0) {
@@ -255,8 +260,8 @@ public class BinaryLoader extends BaseLoader {
             if (loader.bytesAvailable > 0)
                 loader.readBytes(bytes, bytes.length, loader.bytesAvailable);
 
-            if (BinaryManager.TRACE_FLAG && BinaryManager.ilog)
-                BinaryManager.ilog.debug("LoadCompleted "
+            if (TRACE_FLAG && ilog)
+                ilog.debug("LoadCompleted "
                         + _data.urlReq.url + ", len:"
                         + _data.ba.length + ", total:"
                         + _data.bytesTotal + ", hs:"
@@ -292,8 +297,8 @@ public class BinaryLoader extends BaseLoader {
             clearDirtyData();
             startLoading();
             _reloadTimes++;
-            if (BinaryManager.TRACE_FLAG && BinaryManager.ilog)
-                BinaryManager.ilog.debug("repeatLoad " + _data.urlReq.url + ", reloadTimes:" + _reloadTimes);
+            if (TRACE_FLAG && ilog)
+                ilog.debug("repeatLoad " + _data.urlReq.url + ", reloadTimes:" + _reloadTimes);
         } else {
             onFinallyErrorHandle();
         }

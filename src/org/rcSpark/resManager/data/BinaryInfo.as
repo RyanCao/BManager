@@ -49,6 +49,10 @@ public class BinaryInfo
 	 * <p>可用于数据绑定</p>
 	 */
     public var bytesTotal:uint = 0;
+    /**
+     * 加载类型 不用于解析文件，只用于加载限制
+     */
+    public var loadType:int;
     /***
 	 * 加载等级
 	 * */
@@ -60,6 +64,7 @@ public class BinaryInfo
 	public var onCompleteHandle:Function ;
 	public var onErrorHandle:Function ;
 	public var onProgressHandle:Function ;
+
 	//-----------------------------------------------------------------------------
 	// Constructor
 	//-----------------------------------------------------------------------------

@@ -13,6 +13,7 @@ import flash.utils.ByteArray;
 import org.rcSpark.rcant;
 import org.rcSpark.resManager.events.BinaryEvent;
 import org.rcSpark.resManager.manager.BinaryManager;
+import org.rcSpark.resManager.manager.NBinaryManager;
 
 public class LoaderDeferred extends Deferred
 {
@@ -55,7 +56,8 @@ public class LoaderDeferred extends Deferred
 			this._contentFormat = contentFormat
 			this._url  =url;
 			_inDomain = inDomain ;
-			BinaryManager.instance().rcant::load(url,0,onCompleteHandler,onProgressHandler,onErrorHandler);
+			//BinaryManager.instance().rcant::load(url,0,onCompleteHandler,onProgressHandler,onErrorHandler);
+            NBinaryManager.instance().rcant::load(url,0,0,onCompleteHandler,onProgressHandler,onErrorHandler);
 		}
 		return this;
 	}

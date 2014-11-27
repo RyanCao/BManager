@@ -27,7 +27,7 @@ import tools.ILogger;
 // import_declaration
 //-----------------------------------------------------------------------------
 
-public class BinaryManager
+public final class BinaryManager
 {
 	//-----------------------------------------------------------------------------
 	// Var
@@ -69,10 +69,6 @@ public class BinaryManager
 	 * 文件md5值存取
 	 * */
 	private var _fileMd5Dic:Dictionary;
-	/***
-	 * 重複加載庫
-	 * */
-	private var retryDic:Dictionary;
 	/***
 	 * 已经加载完成的资源[BinaryInfo]
 	 * */
@@ -320,29 +316,34 @@ public class BinaryManager
 	protected function startLoad() : void {
 		if (this._loadingCount < MAX_THREAD && this._waitList.length > 0) {
 			var resData:BinaryInfo = this._waitList.shift();
-			if (resData != null) {
-				resData.state = BinaryInfo.LOADING;
-				this._loadingCount++;
-				if(!_loadingList)
-					_loadingList = new Vector.<BinaryInfo>();
-				_loadingList.push(resData);
-				var loader : BinaryLoader = new BinaryLoader(resData);
-				loader.overTime = BinaryManager.OVER_TIME ;
-				loader.overlook = BinaryManager.OVER_LOOK ;
-				if(!loader.hasEventListener(BinaryEvent.COMPLETED))
-					loader.addEventListener(BinaryEvent.COMPLETED, onCompleteHandler,false,0,true);
-				if(!loader.hasEventListener(BinaryEvent.ERROR))
-					loader.addEventListener(BinaryEvent.ERROR, onErrorHandler,false,0,true);
-				if(!loader.hasEventListener(BinaryEvent.PROGRESS))
-					loader.addEventListener(BinaryEvent.PROGRESS, onProgressHandler,false,0,true);
-				loader.load(resData.urlReq);
-				if(TRACE_FLAG&&ilog){
-					ilog.info("---BinaryManager--startLoad--url--{0}",URLCode.encode(resData.urlReq));
-				}
-			} else {
-			}
+            loadBinaryInfo(resData)
+            this._loadingCount++;
 		}
 	}
+
+    private function loadBinaryInfo(resData:BinaryInfo):void{
+        if (resData != null) {
+            resData.state = BinaryInfo.LOADING;
+            if(!_loadingList)
+                _loadingList = new Vector.<BinaryInfo>();
+            _loadingList.push(resData);
+            var loader : BinaryLoader = new BinaryLoader(resData);
+            loader.overTime = OVER_TIME ;
+            loader.overlook = OVER_LOOK ;
+            loader.ilog = ilog ;
+            loader.TRACE_FLAG = TRACE_FLAG ;
+            if(!loader.hasEventListener(BinaryEvent.COMPLETED))
+                loader.addEventListener(BinaryEvent.COMPLETED, onCompleteHandler,false,0,true);
+            if(!loader.hasEventListener(BinaryEvent.ERROR))
+                loader.addEventListener(BinaryEvent.ERROR, onErrorHandler,false,0,true);
+            if(!loader.hasEventListener(BinaryEvent.PROGRESS))
+                loader.addEventListener(BinaryEvent.PROGRESS, onProgressHandler,false,0,true);
+            loader.load(resData.urlReq);
+            if(TRACE_FLAG&&ilog){
+                ilog.info("---BinaryManager--startLoad--url--{0}",URLCode.encode(resData.urlReq));
+            }
+        }
+    }
 	
 	protected function onProgressHandler(evt : BinaryEvent) : void {
 		var loader : BinaryLoader = (evt.target as BinaryLoader);
@@ -474,44 +475,44 @@ public class BinaryManager
 			_waitList.push(vo);
 			return ;
 		}
-		
-		while (i < _waitList.length) {
-			compair = (_waitList[i] as BinaryInfo);
-			if (compair.url == vo.url){
-				compair.loadLevel = Math.max(Math.min(vo.loadLevel, compair.loadLevel), 0);
-				compair.isSave = ((vo.isSave) || (compair.isSave));
-				toWake = _waitToWake[compair.url];
-				if (!(toWake)){
-					toWake = new WaitToWake();
-				}
-				toWake.url = compair.url;
-				toWake.addCompleteHandle(vo.onCompleteHandle);
-				toWake.addProgressHandles(vo.onProgressHandle);
-				toWake.addErrorHandles(vo.onErrorHandle);
-				_waitToWake[compair.url] = toWake;
-				return;
-			}
-			i++;
-		}
-		i = 0;
-		while (i < _loadingList.length) {
-			compair = (_loadingList[i] as BinaryInfo);
-			if (compair.url == vo.url){
-				compair.loadLevel = Math.max(Math.min(vo.loadLevel, compair.loadLevel), 0);
-				compair.isSave = ((vo.isSave) || (compair.isSave));
-				toWake = _waitToWake[compair.url];
-				if (!(toWake)){
-					toWake = new WaitToWake();
-				}
-				toWake.url = compair.url;
-				toWake.addCompleteHandle(vo.onCompleteHandle);
-				toWake.addProgressHandles(vo.onProgressHandle);
-				toWake.addErrorHandles(vo.onErrorHandle);
-				_waitToWake[compair.url] = toWake;
-				return;
-			}
-			i++;
-		}
+
+        if(_loadingList){
+            i = 0;
+            while (i < _loadingList.length) {
+                if (_loadingList[i].url == vo.url){
+                    compair =  _loadingList[i];
+                    break;
+                }
+                i++;
+            }
+        }
+
+		if(!compair){
+            i = 0;
+            while (i < _waitList.length) {
+                if (_waitList[i].url == vo.url){
+                    compair =  _waitList[i];
+                    break;
+                }
+                i++;
+            }
+        }
+
+        if(compair){
+            compair.loadLevel = Math.max(Math.min(vo.loadLevel, compair.loadLevel), 0);
+            compair.isSave = ((vo.isSave) || (compair.isSave));
+            toWake = _waitToWake[compair.url];
+            if (!(toWake)){
+                toWake = new WaitToWake();
+            }
+            toWake.url = compair.url;
+            toWake.addCompleteHandle(vo.onCompleteHandle);
+            toWake.addProgressHandles(vo.onProgressHandle);
+            toWake.addErrorHandles(vo.onErrorHandle);
+            _waitToWake[compair.url] = toWake;
+            return;
+        }
+
 		_waitList.push(vo);
 	}
 	
