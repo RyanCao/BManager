@@ -27,7 +27,7 @@ import tools.ILogger;
 // import_declaration
 //-----------------------------------------------------------------------------
 
-public final class BinaryManager
+public class BinaryManager
 {
 	//-----------------------------------------------------------------------------
 	// Var
