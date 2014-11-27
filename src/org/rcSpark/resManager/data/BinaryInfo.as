@@ -45,7 +45,7 @@ public class BinaryInfo
 	/**已加载的字节数*/
 	public var bytesLoaded:uint=0;
 	/**资源总大小
-	 * <p>如果资源是实时流,或大小未知,那麼總大小與<code>bytesLoaded<code>的值一样,会随着下载数据增加而动态增加</p>
+	 * <p>如果资源是实时流,或大小未知,那麼總大小與<code>bytesLoaded</code>的值一样,会随着下载数据增加而动态增加</p>
 	 * <p>可用于数据绑定</p>
 	 */
     public var bytesTotal:uint = 0;
