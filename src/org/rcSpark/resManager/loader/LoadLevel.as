@@ -21,13 +21,9 @@ public class LoadLevel
 	 */	
 	public static const LIB:uint = 0 ;
 	/**
-	 *地图文件
-	 */	
-	public static const MAP_FILES:uint = 0 ;
-	/**
 	 * 3D模型，贴图类文件
 	 * */
-	public static const AWAY3D_FILES:uint = 0 ;
+	public static const AWAY3D_FILES:uint = 1 ;
 	/**
 	 * ICON文件 
 	 */	
@@ -40,5 +36,9 @@ public class LoadLevel
 	 * 外部Swf特效文件 
 	 */	
 	public static const EXTERNAL_SWF_EFFECT:uint = 6 ;
+    /**
+     *地图文件
+     */
+    public static const MAP_FILES:uint = 8 ;
 }
 }

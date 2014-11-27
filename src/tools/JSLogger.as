@@ -123,10 +123,10 @@ package tools
 		 * */
 		private static function send(type:String,message:String,parameters:*):void{
 			if(enabled){
+                trace("console."+type,StringUtil.substitute(message,parameters));
 				if( isExternalInterfaceAvailable) {
 					ExternalInterface.call("console."+type, StringUtil.substitute(message,parameters));
 				}
-				trace(StringUtil.substitute(message,parameters));
 			}
 		}
 		

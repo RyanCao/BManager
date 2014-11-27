@@ -7,19 +7,17 @@
  ******************************************************************************/
 package org.rcSpark.resManager.manager
 {
-
-import com.adobe.crypto.MD5Stream;
-
 import flash.net.URLRequest;
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
+import flash.utils.clearTimeout;
+import flash.utils.setTimeout;
 
 import org.rcSpark.rcant;
 import org.rcSpark.resManager.data.BinaryInfo;
 import org.rcSpark.resManager.data.WaitToWake;
 import org.rcSpark.resManager.events.BinaryEvent;
 import org.rcSpark.resManager.loader.BinaryLoader;
-import org.rcSpark.resManager.util.MemoryMd5;
 import org.rcSpark.resManager.util.URLCode;
 import org.rcSpark.tools.file.IFileCookie;
 
@@ -67,6 +65,10 @@ public final class BinaryManager
 	 * 资源地址库[String]
 	 * */
 	private var _urlDic:Dictionary;
+	/**
+	 * 文件md5值存取
+	 * */
+	private var _fileMd5Dic:Dictionary;
 	/***
 	 * 重複加載庫
 	 * */
@@ -97,7 +99,19 @@ public final class BinaryManager
 	 * 当前正在进行的文件加载数量
 	 * */
 	private var _loadingCount:uint = 0;
-	
+
+	public static const _baBitMax:Number = 52428800;
+	public static const memoryCleanCount:Number = 50;
+    /**
+     * 是否使用异步回调
+     */
+	public static var syncCall:Boolean = false;
+
+	private var _baBit:Number = 0;
+
+	private var _baAllLoaderBit:Number = 0;
+
+	private var _baSingleBit:Number = 0;
 	//-----------------------------------------------------------------------------
 	// Constructor
 	//-----------------------------------------------------------------------------
@@ -107,6 +121,8 @@ public final class BinaryManager
 			throw new Error("BinaryManager is single!")
 			return ;
 		}
+        _urlDic = new Dictionary(true);
+        _fileMd5Dic = new Dictionary(true);
 		loadedDic = new Dictionary(true);
 		errorDic = new Dictionary(true);
 		_waitToWake = new Dictionary(true);
@@ -252,7 +268,16 @@ public final class BinaryManager
 			//已加载完成
 			resEvent =new BinaryEvent(BinaryEvent.COMPLETED);
 			resEvent.binaryInfo = BinaryInfo(loadedDic[si.url]);
-			si.onCompleteHandle(resEvent);
+            if(si.onCompleteHandle != null){
+                if(syncCall){
+                    var t:uint = setTimeout(function():void{
+                        si.onCompleteHandle(resEvent);
+                        clearTimeout(t);
+                    },20);
+                }else{
+                    si.onCompleteHandle(resEvent)
+                }
+            }
 			return ;
 		}
 		
@@ -263,7 +288,8 @@ public final class BinaryManager
 				loadedDic[si.url] = si ;
 				resEvent =new BinaryEvent(BinaryEvent.COMPLETED);
 				resEvent.binaryInfo = BinaryInfo(loadedDic[si.url]);
-				si.onCompleteHandle(resEvent);
+                if(si.onCompleteHandle != null)
+				    si.onCompleteHandle(resEvent);
 				return ;
 			}
 		}
@@ -272,7 +298,17 @@ public final class BinaryManager
 		{
 			resEvent =new BinaryEvent(BinaryEvent.ERROR);
 			resEvent.binaryInfo = si ;
-			si.onErrorHandle(resEvent);
+
+            if(si.onErrorHandle != null){
+                if(syncCall){
+                    var errorT:uint = setTimeout(function():void{
+                        si.onErrorHandle(resEvent);
+                        clearTimeout(errorT);
+                    },10);
+                }else{
+                    si.onErrorHandle(resEvent);
+                }
+            }
 			return ;
 		}
 		
@@ -329,12 +365,18 @@ public final class BinaryManager
 		if(loader.hasEventListener(BinaryEvent.ERROR))
 			loader.removeEventListener(BinaryEvent.ERROR, onErrorHandler);
 		var streamInfo:BinaryInfo = loader.getResData() ;
+        _baBit += streamInfo.ba.length ;
+        _baAllLoaderBit += streamInfo.ba.length ;
+        if(!_urlDic[streamInfo.url]){
+            _baSingleBit += streamInfo.ba.length ;
+        }
+        _urlDic[streamInfo.url] = true ;
+
 		var keyUrl:String = getKeyUrl(streamInfo.url);
-		
 
 		var ver:String = getVersion(keyUrl);
 		if(ver&&ver!=""){
-            var md5String:String = getMd5String(streamInfo.ba,streamInfo.md5sum);
+            var md5String:String = getMd5String(streamInfo.ba,streamInfo.md5sum,streamInfo.url);
             if(md5String != ver){
                 if(TRACE_FLAG&&ilog){
                     //文件不匹配
@@ -342,7 +384,7 @@ public final class BinaryManager
                 }
             }
 		}
-		
+
 		if(TRACE_FLAG&&ilog){
 			ilog.info("---BinaryManager--loadComplete----url----{0}--",URLCode.encode(streamInfo.urlReq));
 		}
@@ -370,16 +412,14 @@ public final class BinaryManager
 	 * 获取Md5String 
 	 * @param ba
 	 * @param version
-	 * @return 
+	 * @param url
+	 * @return
 	 * 
 	 */	
-	private function getMd5String(ba:ByteArray,version:String = ""):String{
+	private function getMd5String(ba:ByteArray,version:String = "",url:String =""):String{
 		var md5String:String = version ;
-		
-//		var md5:MD5Stream = new MD5Stream();
-//		md5String = md5.complete(ba);
-		md5String = MemoryMd5.hashBinary(ba);
-		return md5String ;
+        //md5String = MemoryMd5.hashBinary(ba);
+        return md5String;
 	}
 	
 	/***
@@ -532,11 +572,83 @@ public final class BinaryManager
 			return (loadedDic[url] as BinaryInfo).ba;
 		return null;
 	}
-	
+
+	/**
+	 * 以指定url为键值，并以指定类型获取唯一的资源,
+	 * @param url
+	 * @param type
+	 * @return
+	 *
+	 */
+	public function getResMd5ByUrl(url : String) : String {
+		if(_fileMd5Dic[url])
+			return _fileMd5Dic[url];
+        var ba:ByteArray = getResByUrl(url);
+        if(ba){
+           return getMd5String(ba,"",url);
+        }
+		return "";
+	}
+
+    /**
+     * 清理所有内存
+     */
 	public function memoryClean():void{
 		for (var key1:* in loadedDic) {
-			delete loadedDic[key1];
+            memoryCleanByUrl(key1)
 		}
 	}
+
+    /**
+     * 清理单个内存
+     * @param url
+     */
+	public function memoryCleanByUrl(url:String):void{
+        var bi:BinaryInfo = loadedDic[url];
+        if(bi){
+            if(bi.ba)
+                _baBit -= bi.ba.length ;
+            bi.dispose();
+        }
+        delete loadedDic[url];
+	}
+
+    /**
+     * 清理不常用内存
+     */
+    private function cleanMemory():void{
+        if(memoryBytes >_baBitMax ){
+            var urlToCleans:Array = [] ;
+            for (var key1:* in loadedDic) {
+                urlToCleans.push(key1);
+                if(urlToCleans.length > memoryCleanCount){
+                    break;
+                }
+            }
+            for each(var url:String in urlToCleans){
+                memoryCleanByUrl(url);
+            }
+        }
+    }
+
+    /**
+     * 当前内存
+     */
+    public function get memoryBytes():Number{
+        return _baBit ;
+    }
+    /**
+     * 已加载的内存，重复加载，重复计算
+     */
+    public function get memoryLoaderFilesBytes():Number{
+        return _baAllLoaderBit ;
+    }
+    /**
+     * 已加载的内存，重复加载，不重复计算
+     */
+    public function get memoryAllFilesBytes():Number{
+        return _baSingleBit ;
+    }
+
 }
 }

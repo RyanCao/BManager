@@ -70,7 +70,7 @@ public class BaseLoader extends EventDispatcher
 	 * @param evt
 	 *
 	 */
-	protected function onCompleteHandler(evt:Event):void
+	private function onCompleteHandler(evt:Event):void
 	{
 		if (evt.target != null)
 		{
@@ -115,7 +115,7 @@ public class BaseLoader extends EventDispatcher
 	 * @param evt
 	 *
 	 */
-	protected function onErrorHandle(evt:ErrorEvent):void
+    private function onErrorHandle(evt:ErrorEvent):void
 	{
 		if (evt.target != null)
 		{
