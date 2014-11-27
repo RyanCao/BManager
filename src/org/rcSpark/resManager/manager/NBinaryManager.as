@@ -11,14 +11,12 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import org.rcSpark.rcant;
-
 import org.rcSpark.resManager.data.BinaryInfo;
 import org.rcSpark.resManager.data.WaitToWake;
 import org.rcSpark.resManager.events.BinaryEvent;
 import org.rcSpark.resManager.loader.BinaryLoader;
 import org.rcSpark.resManager.loader.LoadType;
 import org.rcSpark.resManager.util.URLCode;
-
 import org.rcSpark.tools.file.IFileCookie;
 
 import tools.ILogger;
@@ -47,7 +45,7 @@ public final class NBinaryManager{
     /**
      * Log 记录 请先实现再打开log开关
      */
-    public static var ilog:tools.ILogger ;
+    public static var ilog:ILogger ;
     /**
      * Version 记录 请先实现再进行加载
      */
@@ -499,12 +497,13 @@ public final class NBinaryManager{
          * 所有线程数，如果都不存在，则加载其他的
          */
         var allNoOtherThread:uint = 0 ;
+        var resData:BinaryInfo
         while (i < _loadQueueList.length) {
             loadQueue = _loadQueueList[i];
             if(loadQueue.type!=LoadType.OTHER){
                 //从高优先级的列表中检查
                 if(loadQueue.nowThread < loadQueue.maxThread && loadQueue.waitList.length>0){
-                    var resData:BinaryInfo = loadQueue.waitList.shift();
+                    resData = loadQueue.waitList.shift();
                     loadBinaryInfo(resData);
                     loadQueue.nowThread++;
                 }
@@ -516,7 +515,7 @@ public final class NBinaryManager{
             //非其他文件加载完成
             loadQueue = getLoadQueue(LoadType.OTHER);
             if(loadQueue.nowThread < loadQueue.maxThread && loadQueue.waitList.length>0){
-                var resData:BinaryInfo = loadQueue.waitList.shift();
+                resData = loadQueue.waitList.shift();
                 loadBinaryInfo(resData);
                 loadQueue.nowThread++;
             }
