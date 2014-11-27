@@ -10,23 +10,22 @@ package tools
 	//-----------------------------------------------------------------------------
 	// import_declaration
 	//-----------------------------------------------------------------------------
-	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
-	import flash.external.ExternalInterface;
-	import flash.utils.describeType;
-	
-	import mx.utils.StringUtil;
-	
-	
-	public class JSLogger extends EventDispatcher implements ILogger	
+import flash.events.EventDispatcher;
+import flash.events.IEventDispatcher;
+import flash.external.ExternalInterface;
+import flash.utils.describeType;
+
+import mx.utils.StringUtil;
+
+public class JSLogger extends EventDispatcher implements ILogger
 	{
 		//-----------------------------------------------------------------------------
 		// Var
 		//-----------------------------------------------------------------------------
-		public static var enabled:Boolean = true;
-		public static var _isExternalInterfaceAvailable:Boolean;
-		public static var isInit:Boolean;
-		public static var __instance:ILogger;
+        private static var enabled:Boolean = true;
+        private static var _isExternalInterfaceAvailable:Boolean;
+        private static var isInit:Boolean;
+		private static var __instance:ILogger;
 		
 		//-----------------------------------------------------------------------------
 		// Constructor

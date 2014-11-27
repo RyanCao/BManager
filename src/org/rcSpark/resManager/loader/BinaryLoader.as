@@ -118,6 +118,9 @@ public class BinaryLoader extends BaseLoader {
     protected function removeLoaderHandler():void {
         var loader:URLStream = _loader as URLStream;
 
+        if(!loader)
+            return ;
+
         if (loader.hasEventListener(Event.COMPLETE))
             loader.removeEventListener(Event.COMPLETE, onCompleteHandler);
 
@@ -254,9 +257,9 @@ public class BinaryLoader extends BaseLoader {
 
             if (BinaryManager.TRACE_FLAG && BinaryManager.ilog)
                 BinaryManager.ilog.debug("LoadCompleted "
-                        + _data.urlReq.url + ", "
-                        + _data.ba.length + ", "
-                        + _data.bytesTotal + ", "
+                        + _data.urlReq.url + ", len:"
+                        + _data.ba.length + ", total:"
+                        + _data.bytesTotal + ", hs:"
                         + _httpStatus);
 
             if ((_httpStatus >= 200 && _httpStatus < 400) || (_data.ba.length > 0 && (_data.bytesTotal == _data.ba.length || _data.bytesTotal == 0))) {
@@ -289,6 +292,8 @@ public class BinaryLoader extends BaseLoader {
             clearDirtyData();
             startLoading();
             _reloadTimes++;
+            if (BinaryManager.TRACE_FLAG && BinaryManager.ilog)
+                BinaryManager.ilog.debug("repeatLoad " + _data.urlReq.url + ", reloadTimes:" + _reloadTimes);
         } else {
             onFinallyErrorHandle();
         }
