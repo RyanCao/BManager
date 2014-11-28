@@ -7,3 +7,4 @@ bin
 *.iml
 output
 out
+sdk.properties
