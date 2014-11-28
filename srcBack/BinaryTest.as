@@ -25,7 +25,7 @@ public class BinaryTest extends TestSprite{
 //    private var cdn:String = "d:/app/nginx-1.7.7/html/";
 
 //    private var cdn:String = "http://localhost/";
-    private var cdn:String = "http://sssj.static.xyimg.net/test/resource_stone/prepare//resource_stone/zh_cn/assets/";
+    private var cdn:String = "http://sssj.static.xyimg.net/test/resource_stone/prepare/resource_stone/zh_cn/assets/";
 //    private var cdn:String = "ftp://172.27.108.2:2121/Tencent/QQfile_recv/";
 //    private var assets:Array = [
 //        "DSC_0091.JPG",
@@ -40,7 +40,7 @@ public class BinaryTest extends TestSprite{
         ["itemIcons/5.png",LoadType.LIB],
         ["itemIcons/7.png",LoadType.LIB],
         ["swf/zidongxunlu.swf",LoadType.LIB],
-        ["monsters/lianyexiaoyao/encode/model.pad ",LoadType.LIB],
+        ["monsters/lianyexiaoyao/encode/model.pad",LoadType.LIB],
         ["interElements/textures/moxing_03_66.png",LoadType.LIB],
         ["interElements/textures/xulie_25_25.png",LoadType.LIB],
         ["interElements/textures/moxing_03_16.png",LoadType.CORE_FILES],
