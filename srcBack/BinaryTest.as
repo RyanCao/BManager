@@ -34,18 +34,16 @@ public class BinaryTest extends TestSprite{
 //        "DSC_0222.JPG"
 //    ];
     private var assets:Array = [
-        ["itemIcons/7.png",LoadType.LIB,1],
-        ["swf/zidongxunlu.swf",LoadType.LIB,2],
-        ["swf/iconLoading.swf",LoadType.LIB,3],
         ["monsters/lianyexiaoyao/encode/model.pad",LoadType.LIB,4],
         ["interElements/textures/moxing_03_66.png",LoadType.LIB,5],
         ["interElements/textures/xulie_25_25.png",LoadType.LIB,6],
-
+        ["swf/zidongxunlu.swf",LoadType.LIB,2],
+        ["itemIcons/7.png",LoadType.LIB,1],
+        ["swf/iconLoading.swf",LoadType.LIB,3],
         ["interElements/textures/moxing_03_16.png",LoadType.CORE_FILES],
-
-        ["interElements/textures/moxing_05_03.png",LoadType.OTHER,1],
         ["itemIcons/3.png",LoadType.OTHER,4],
         ["itemIcons/5.png",LoadType.OTHER,8],
+        ["interElements/textures/moxing_05_03.png",LoadType.OTHER,1],
         ["itemIcons/2.png",LoadType.OTHER,10]
     ];
     private var h:uint = 0 ;
@@ -69,7 +67,7 @@ public class BinaryTest extends TestSprite{
         var alll:Array = [];
         for(var i:int = 0,len:uint = assets.length;i<len;i++){
             var l:LoaderDeferred = new LoaderDeferred();
-            l.load(cdn + assets[i][0],ResFormat.BINARY,assets[i][1]).completes(addText);
+            l.load(cdn + assets[i][0],ResFormat.BINARY,assets[i][1],assets[i][2]).completes(addText);
             alll.push(l);
         }
         whenOneArray(alll).completes(completeHandler);
