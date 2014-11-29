@@ -5,7 +5,7 @@
  * Create:		Jun 11, 2014 5:33:00 PM
  * Update:		Jun 11, 2014 5:33:00 PM
  ******************************************************************************/
-package org.rcSpark.resManager.manager
+package org.rcSpark.binaryManager.manager
 {
 import flash.net.URLRequest;
 import flash.utils.ByteArray;
@@ -14,11 +14,11 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import org.rcSpark.rcant;
-import org.rcSpark.resManager.data.BinaryInfo;
-import org.rcSpark.resManager.data.WaitToWake;
-import org.rcSpark.resManager.events.BinaryEvent;
-import org.rcSpark.resManager.loader.BinaryLoader;
-import org.rcSpark.resManager.util.URLCode;
+import org.rcSpark.binaryManager.data.BinaryInfo;
+import org.rcSpark.binaryManager.data.WaitToWake;
+import org.rcSpark.binaryManager.events.BinaryEvent;
+import org.rcSpark.binaryManager.loader.BinaryLoader;
+import org.rcSpark.binaryManager.util.URLCode;
 import org.rcSpark.tools.file.IFileCookie;
 
 import tools.ILogger;

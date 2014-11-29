@@ -9,12 +9,12 @@ package org.rcSpark.resManager.data {
 import flash.display.BitmapData;
 import flash.utils.ByteArray;
 
+import org.rcSpark.binaryManager.events.BinaryEvent;
+import org.rcSpark.binaryManager.manager.BinaryManager;
 import org.rcSpark.rcant;
-import org.rcSpark.resManager.events.BinaryEvent;
 import org.rcSpark.resManager.events.ResEvent;
-import org.rcSpark.resManager.loader.parse.ResParseBase;
-import org.rcSpark.resManager.manager.BinaryManager;
 import org.rcSpark.resManager.manager.ResManager;
+import org.rcSpark.resManager.parse.ResParseBase;
 
 use namespace rcant;
 
@@ -103,22 +103,22 @@ public class ResInfo {
         return bi;
     }
 
-    public function dispose():void{
-        if(content){
-            if(content is BitmapData){
+    public function dispose():void {
+        if (content) {
+            if (content is BitmapData) {
                 (content as BitmapData).dispose();
-            }else if(content is ByteArray){
+            } else if (content is ByteArray) {
                 (content as ByteArray).clear();
             }
-            content = null ;
+            content = null;
         }
-        onCompleteHandle = null ;
-        onErrorHandle = null ;
-        onProgressHandle = null ;
+        onCompleteHandle = null;
+        onErrorHandle = null;
+        onProgressHandle = null;
 
-        _onBinaryParseComplete = null ;
-        _onBinaryParseProcess = null ;
-        _onBinaryParseError = null ;
+        _onBinaryParseComplete = null;
+        _onBinaryParseProcess = null;
+        _onBinaryParseError = null;
     }
 
     public function load(onBinaryParseComplete:Function = null, onBinaryParseProcess:Function = null, onBinaryParseError:Function = null):void {

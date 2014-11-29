@@ -10,8 +10,8 @@ import flash.system.LoaderContext;
 import flash.utils.ByteArray;
 
 import org.rcSpark.rcant;
-import org.rcSpark.resManager.events.BinaryEvent;
-import org.rcSpark.resManager.manager.NBinaryManager;
+import org.rcSpark.binaryManager.events.BinaryEvent;
+import org.rcSpark.binaryManager.manager.NBinaryManager;
 import org.rcSpark.tools.core.AsyncCallQuene;
 
 public class LoaderDeferred extends Deferred {

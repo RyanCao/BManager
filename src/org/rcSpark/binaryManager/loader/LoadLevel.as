@@ -5,7 +5,7 @@
  * Create:		Jun 20, 2014 11:55:39 AM
  * Update:		Jun 20, 2014 11:55:39 AM
  ******************************************************************************/
-package org.rcSpark.resManager.loader
+package org.rcSpark.binaryManager.loader
 {
 //-----------------------------------------------------------------------------
 // import_declaration

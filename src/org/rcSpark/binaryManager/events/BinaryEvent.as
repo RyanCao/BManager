@@ -5,14 +5,14 @@
  * Create:		Jun 11, 2014 6:15:19 PM
  * Update:		Jun 11, 2014 6:15:19 PM
  ******************************************************************************/
-package org.rcSpark.resManager.events
+package org.rcSpark.binaryManager.events
 {
 //-----------------------------------------------------------------------------
 // import_declaration
 //-----------------------------------------------------------------------------
 import flash.events.Event;
 
-import org.rcSpark.resManager.data.BinaryInfo;
+import org.rcSpark.binaryManager.data.BinaryInfo;
 
 
 public class BinaryEvent extends Event

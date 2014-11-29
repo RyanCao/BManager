@@ -5,7 +5,7 @@
  * Create:        Jun 11, 2014 6:10:33 PM
  * Update:        Jun 11, 2014 6:10:33 PM
  ******************************************************************************/
-package org.rcSpark.resManager.loader {
+package org.rcSpark.binaryManager.loader {
 //-----------------------------------------------------------------------------
 // import_declaration
 //-----------------------------------------------------------------------------
@@ -21,8 +21,8 @@ import flash.net.URLRequestHeader;
 import flash.net.URLStream;
 import flash.utils.ByteArray;
 
-import org.rcSpark.resManager.data.BinaryInfo;
-import org.rcSpark.resManager.events.BinaryEvent;
+import org.rcSpark.binaryManager.data.BinaryInfo;
+import org.rcSpark.binaryManager.events.BinaryEvent;
 import org.rcSpark.tools.time.TimerManager;
 
 import tools.ILogger;

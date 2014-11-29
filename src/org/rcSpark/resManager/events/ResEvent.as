@@ -7,8 +7,6 @@
 package org.rcSpark.resManager.events {
 import flash.events.Event;
 
-import org.rcSpark.resManager.data.ResInfo;
-
 public class ResEvent extends Event {
     //-----------------------------------------------------------------------------
     // Var

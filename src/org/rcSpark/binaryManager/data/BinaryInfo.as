@@ -5,7 +5,7 @@
  * Create:		Jun 11, 2014 6:02:11 PM
  * Update:		Jun 11, 2014 6:02:11 PM
  ******************************************************************************/
-package org.rcSpark.resManager.data
+package org.rcSpark.binaryManager.data
 {
 import flash.net.URLRequest;
 import flash.utils.ByteArray;

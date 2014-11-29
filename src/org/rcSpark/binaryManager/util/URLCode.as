@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2009 - 2010 LOOKBACKON All rights reserved.
  */
-package org.rcSpark.resManager.util
+package org.rcSpark.binaryManager.util
 {
 import flash.net.URLRequest;
 import flash.net.URLVariables;

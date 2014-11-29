@@ -4,7 +4,7 @@
  * Author: caoqingshan
  * Create: 14-9-17 下午4:31
  */
-package org.rcSpark.resManager.loader.parse {
+package org.rcSpark.resManager.parse {
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Loader;

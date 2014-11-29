@@ -4,10 +4,10 @@
  * Author: caoqingshan
  * Create: 14-9-17 下午4:30
  */
-package org.rcSpark.resManager.loader.parse {
+package org.rcSpark.resManager.parse {
 import flash.utils.ByteArray;
 
-import org.rcSpark.resManager.error.AbstractMethodError;
+import org.rcSpark.binaryManager.error.AbstractMethodError;
 import org.rcSpark.tools.core.AsyncCallQuene;
 
 public class ResParseBase {

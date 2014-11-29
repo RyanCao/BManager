@@ -5,7 +5,7 @@
  * Create:		Jun 11, 2014 5:35:32 PM
  * Update:		Jun 11, 2014 5:35:32 PM
  ******************************************************************************/
-package org.rcSpark.resManager.manager
+package org.rcSpark.binaryManager.manager
 {
 import flash.utils.Dictionary;
 

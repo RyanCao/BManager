@@ -4,7 +4,7 @@
  * Author: caoqingshan
  * Create: 14-9-17 下午4:27
  */
-package org.rcSpark.resManager.loader.parse {
+package org.rcSpark.resManager.parse {
 import org.rcSpark.resManager.manager.ResManager;
 
 public class ResParsers {

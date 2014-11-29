@@ -3,9 +3,9 @@
  * Description:二进制加载队列
  * Created by Ryan on 2014/11/27 22:57.
  */
-package org.rcSpark.resManager.manager {
-import org.rcSpark.resManager.data.BinaryInfo;
-import org.rcSpark.resManager.loader.LoadType;
+package org.rcSpark.binaryManager.manager {
+import org.rcSpark.binaryManager.data.BinaryInfo;
+import org.rcSpark.binaryManager.loader.LoadType;
 
 public class BinaryLoadQueue {
     //-----------------------------------------

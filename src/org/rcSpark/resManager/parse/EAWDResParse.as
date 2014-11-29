@@ -1,16 +1,14 @@
 /**
- * Class name: AWPResParse.as
+ * Class name: AWDResParse.as
  * Description:
  * Author: caoqingshan
  * Create: 14-9-25 下午4:33
  */
-package org.rcSpark.resManager.loader.parse {
-//import com.hurlant.util.Base64;
-
+package org.rcSpark.resManager.parse {
 import flash.utils.ByteArray;
 import flash.utils.Endian;
 
-public class EAWPResParse extends ResParseBase {
+public class EAWDResParse extends ResParseBase {
     //-----------------------------------------------------------------------------
     // Var
     //-----------------------------------------------------------------------------
@@ -21,10 +19,10 @@ public class EAWPResParse extends ResParseBase {
 
     public static function supportsType(extension:String):Boolean {
         extension = extension.toLowerCase();
-        return (["pap"].indexOf(extension) > -1);
+        return (["pad"].indexOf(extension) > -1);
     }
 
-    public function EAWPResParse() {
+    public function EAWDResParse() {
         super();
     }
 
@@ -39,10 +37,7 @@ public class EAWPResParse extends ResParseBase {
         _byteData.endian = Endian.LITTLE_ENDIAN;
         _byteData.writeBytes(getByteData())
         var outBa:ByteArray = decodeByteArray(_byteData);
-        var outString:String = outBa.readUTFBytes(outBa.length);
-        outString = outString.replace(/\n/g, "");
-        var decodeBa:ByteArray //= Base64.decodeToByteArray(outString);
-        finishParse(decodeBa);
+        finishParse(outBa);
         return true;
     }
 }

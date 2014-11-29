@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2009 - 2010 LOOKBACKON All rights reserved.
  */
-package org.rcSpark.resManager.loader
+package org.rcSpark.binaryManager.loader
 {
 //--------------------------------------------------------------------------
 //

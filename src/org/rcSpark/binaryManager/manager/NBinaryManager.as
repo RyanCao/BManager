@@ -3,7 +3,7 @@
  * Description:新的二进制加载文件
  * Created by Ryan on 2014/11/27 23:07.
  */
-package org.rcSpark.resManager.manager {
+package org.rcSpark.binaryManager.manager {
 import flash.net.URLRequest;
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
@@ -11,12 +11,12 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import org.rcSpark.rcant;
-import org.rcSpark.resManager.data.BinaryInfo;
-import org.rcSpark.resManager.data.WaitToWake;
-import org.rcSpark.resManager.events.BinaryEvent;
-import org.rcSpark.resManager.loader.BinaryLoader;
-import org.rcSpark.resManager.loader.LoadType;
-import org.rcSpark.resManager.util.URLCode;
+import org.rcSpark.binaryManager.data.BinaryInfo;
+import org.rcSpark.binaryManager.data.WaitToWake;
+import org.rcSpark.binaryManager.events.BinaryEvent;
+import org.rcSpark.binaryManager.loader.BinaryLoader;
+import org.rcSpark.binaryManager.loader.LoadType;
+import org.rcSpark.binaryManager.util.URLCode;
 import org.rcSpark.tools.file.IFileCookie;
 
 import tools.ILogger;

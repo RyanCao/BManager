@@ -12,15 +12,16 @@ import flash.utils.Dictionary;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
+import org.rcSpark.binaryManager.data.WaitToWake;
+import org.rcSpark.binaryManager.manager.*;
+import org.rcSpark.binaryManager.util.URLCode;
 import org.rcSpark.rcant;
 import org.rcSpark.resManager.data.ResInfo;
-import org.rcSpark.resManager.data.WaitToWake;
 import org.rcSpark.resManager.events.ResEvent;
-import org.rcSpark.resManager.loader.parse.EAWDResParse;
-import org.rcSpark.resManager.loader.parse.EAWPResParse;
-import org.rcSpark.resManager.loader.parse.ImageResParse;
-import org.rcSpark.resManager.loader.parse.ResParseBase;
-import org.rcSpark.resManager.util.URLCode;
+import org.rcSpark.resManager.parse.EAWDResParse;
+import org.rcSpark.resManager.parse.EAWPResParse;
+import org.rcSpark.resManager.parse.ImageResParse;
+import org.rcSpark.resManager.parse.ResParseBase;
 
 use namespace rcant;
 
@@ -28,7 +29,7 @@ public class ResManager {
     //-----------------------------------------------------------------------------
     // Var
     //-----------------------------------------------------------------------------
-    private static var _parsers:Vector.<Class> = Vector.<Class>([ ImageResParse,EAWDResParse,EAWPResParse]);
+    private static var _parsers:Vector.<Class> = Vector.<Class>([ ImageResParse, EAWDResParse, EAWPResParse]);
 
     /**
      * 加密文件后缀
@@ -106,7 +107,7 @@ public class ResManager {
             //已经初始化完成
             resEvent = new ResEvent(ResEvent.COMPLETED);
             resEvent.content = _initedDic[keyUrl];
-            if (si.onCompleteHandle!=null) {
+            if (si.onCompleteHandle != null) {
                 var t:uint = setTimeout(function ():void {
                     si.onCompleteHandle(resEvent)
                     clearTimeout(t);
@@ -118,13 +119,13 @@ public class ResManager {
         var newUrl:Boolean = addUrlToInitList(si);
         if (newUrl) {
             //开始加载
-            if(BinaryManager.TRACE_FLAG&&BinaryManager.ilog){
-                BinaryManager.ilog.info("---ResManager--LoadNew--url--{0}",si.url);
+            if (BinaryManager.TRACE_FLAG && BinaryManager.ilog) {
+                BinaryManager.ilog.info("---ResManager--LoadNew--url--{0}", si.url);
             }
             si.load(onCompleteHandler, onProgressHandler, onErrorHandler);
         } else {
-            if(BinaryManager.TRACE_FLAG&&BinaryManager.ilog){
-                BinaryManager.ilog.info("---ResManager--Waiting--url--{0}",si.url);
+            if (BinaryManager.TRACE_FLAG && BinaryManager.ilog) {
+                BinaryManager.ilog.info("---ResManager--Waiting--url--{0}", si.url);
             }
         }
 
@@ -141,7 +142,7 @@ public class ResManager {
         var keyUrl:String = getKeyUrl(evt.url);
 
         var i:int = keyUrl.lastIndexOf('.');
-        if(evt.content is BitmapData)
+        if (evt.content is BitmapData)
             _initedDic[keyUrl] = evt.content;
         removeUrlFromInitList(keyUrl);
         var toWake:WaitToWake = _waitToWake[keyUrl];
@@ -149,8 +150,8 @@ public class ResManager {
             toWake.onCompleteHandle(evt);
         delete _waitToWake[keyUrl];
 
-        if(BinaryManager.TRACE_FLAG&&BinaryManager.ilog){
-            BinaryManager.ilog.info("---ResManager--Complete--url--{0}",keyUrl);
+        if (BinaryManager.TRACE_FLAG && BinaryManager.ilog) {
+            BinaryManager.ilog.info("---ResManager--Complete--url--{0}", keyUrl);
         }
     }
 
@@ -228,21 +229,21 @@ public class ResManager {
         }
     }
 
-    public function memoryClean():void{
+    public function memoryClean():void {
         for (var key1:* in _initedDic) {
             memoryCleanByUrl(key1)
         }
     }
 
-    public function memoryCleanByUrl(url:String):void{
+    public function memoryCleanByUrl(url:String):void {
         var content:* = _initedDic[url];
-        if(content){
-            if(content is BitmapData){
+        if (content) {
+            if (content is BitmapData) {
                 (content as BitmapData).dispose();
-            }else if(content is ByteArray){
+            } else if (content is ByteArray) {
                 (content as ByteArray).clear();
             }
-            content = null ;
+            content = null;
         }
 //        var bi:ResInfo = _initedDic[url];
 //        if(bi){
@@ -295,12 +296,12 @@ public class ResManager {
      * 设置使用加密文件是否开启  ，如果开启则加载时使用加密文件
      * @param value
      */
-    public static function set encodeOn(value:Boolean):void{
-        if(value){
-            _deCodeArray = ["awd","awp"];
-            _enCodeArray = ["pad","pap"];
-            _parsers = Vector.<Class>([ ImageResParse,EAWDResParse,EAWPResParse]);
-        }else{
+    public static function set encodeOn(value:Boolean):void {
+        if (value) {
+            _deCodeArray = ["awd", "awp"];
+            _enCodeArray = ["pad", "pap"];
+            _parsers = Vector.<Class>([ ImageResParse, EAWDResParse, EAWPResParse]);
+        } else {
             _deCodeArray = [];
             _enCodeArray = [];
             _parsers = Vector.<Class>([ ImageResParse]);
@@ -320,14 +321,14 @@ public class ResManager {
         var ii:int = base.lastIndexOf('/');
         var _singleName:String = _fileName.substr(ii + 1);
         var _decodeIndex:int = _deCodeArray.indexOf(_fileExtension.toLowerCase());
-        if(_decodeIndex>-1){
+        if (_decodeIndex > -1) {
             //名字首先放入加密文件夹中
-            _singleName = "encode/"+ _singleName ;
+            _singleName = "encode/" + _singleName;
             _fileExtension = _enCodeArray[_decodeIndex];
-            var newEncryptUrl:String = _fileName.substr(0,ii)+"/"+ _singleName+"."+ _fileExtension;
+            var newEncryptUrl:String = _fileName.substr(0, ii) + "/" + _singleName + "." + _fileExtension;
             return newEncryptUrl;
         }
-        return url ;
+        return url;
     }
 }
 }

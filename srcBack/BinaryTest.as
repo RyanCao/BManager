@@ -13,8 +13,8 @@ import org.osflash.async.LoaderDeferred;
 import org.osflash.async.ResFormat;
 import org.osflash.async.whenOneArray;
 import org.rcSpark.rcant;
-import org.rcSpark.resManager.loader.LoadType;
-import org.rcSpark.resManager.manager.NBinaryManager;
+import org.rcSpark.binaryManager.loader.LoadType;
+import org.rcSpark.binaryManager.manager.NBinaryManager;
 
 import tools.JSLogger;
 

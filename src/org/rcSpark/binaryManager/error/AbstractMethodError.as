@@ -4,7 +4,7 @@
  * Author: caoqingshan
  * Create: 14-9-17 下午4:36
  */
-package org.rcSpark.resManager.error {
+package org.rcSpark.binaryManager.error {
 public class AbstractMethodError extends Error {
     //-----------------------------------------------------------------------------
     // Var

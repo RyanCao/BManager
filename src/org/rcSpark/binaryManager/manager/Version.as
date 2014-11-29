@@ -5,7 +5,7 @@
  * Create:		Jun 11, 2014 5:52:48 PM
  * Update:		Jun 11, 2014 5:52:48 PM
  ******************************************************************************/
-package org.rcSpark.resManager.manager
+package org.rcSpark.binaryManager.manager
 {
 //-----------------------------------------------------------------------------
 // import_declaration
@@ -14,7 +14,7 @@ import flash.net.URLRequest;
 import flash.net.URLVariables;
 import flash.utils.Dictionary;
 
-import org.rcSpark.resManager.util.URLCode;
+import org.rcSpark.binaryManager.util.URLCode;
 
 
 public class Version implements IVersion

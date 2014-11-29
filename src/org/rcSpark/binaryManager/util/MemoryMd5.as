@@ -1,4 +1,4 @@
-package org.rcSpark.resManager.util {
+package org.rcSpark.binaryManager.util {
 
 import flash.Memory;
 import flash.SetDomainMemory;
