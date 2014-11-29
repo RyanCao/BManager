@@ -10,7 +10,9 @@ import flash.display.BitmapData;
 import flash.utils.ByteArray;
 
 import org.rcSpark.binaryManager.events.BinaryEvent;
+import org.rcSpark.binaryManager.loader.LoadType;
 import org.rcSpark.binaryManager.manager.BinaryManager;
+import org.rcSpark.binaryManager.manager.NBinaryManager;
 import org.rcSpark.rcant;
 import org.rcSpark.resManager.events.ResEvent;
 import org.rcSpark.resManager.manager.ResManager;
@@ -59,6 +61,10 @@ public class ResInfo {
      * <p>可用于数据绑定</p>
      */
     public var bytesTotal:uint = 0;
+    /**
+     * 加载类型
+     */
+    public var loadType:uint = LoadType.OTHER;
     /***
      * 加载等级
      * */
@@ -74,6 +80,7 @@ public class ResInfo {
     private var _onBinaryParseComplete:Function;
     private var _onBinaryParseProcess:Function;
     private var _onBinaryParseError:Function;
+
 
     public function ResInfo() {
     }
@@ -127,7 +134,8 @@ public class ResInfo {
         _onBinaryParseError = onBinaryParseError;
 
         encrypturl = ResManager.getEncryptUrl(url);
-        BinaryManager.instance().rcant::load(encrypturl, loadLevel, onBinaryLoadComplete, onBinaryLoadProcess, onBinaryLoadError);
+        //BinaryManager.instance().rcant::load(encrypturl, loadLevel, onBinaryLoadComplete, onBinaryLoadProcess, onBinaryLoadError);
+        NBinaryManager.instance().rcant::load(encrypturl,loadType, loadLevel, onBinaryLoadComplete, onBinaryLoadProcess, onBinaryLoadError);
     }
 
     private function onBinaryLoadComplete(evt:BinaryEvent):void {

@@ -1,8 +1,7 @@
 /**
- * Class name: ResManager.as
- * Description:加载初始化资源
- * Author: caoqingshan 准备废弃  by 2014/11/29
- * Create: 14-9-17 下午4:16
+ * Class Name: NResManager
+ * Description:
+ * Created by Ryan on 2014/11/29 17:44.
  */
 package org.rcSpark.resManager.manager {
 import flash.display.BitmapData;
@@ -13,7 +12,7 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import org.rcSpark.binaryManager.data.WaitToWake;
-import org.rcSpark.binaryManager.manager.*;
+import org.rcSpark.binaryManager.manager.BinaryManager;
 import org.rcSpark.binaryManager.util.URLCode;
 import org.rcSpark.rcant;
 import org.rcSpark.resManager.data.ResInfo;
@@ -25,10 +24,10 @@ import org.rcSpark.resManager.parse.ResParseBase;
 
 use namespace rcant;
 
-public class ResManager {
-    //-----------------------------------------------------------------------------
-    // Var
-    //-----------------------------------------------------------------------------
+public class NResManager {
+    //-----------------------------------------
+    //Var
+    //-----------------------------------------
     private static var _parsers:Vector.<Class> = Vector.<Class>([ ImageResParse, EAWDResParse, EAWPResParse]);
 
     /**
@@ -40,7 +39,7 @@ public class ResManager {
      */
     private static var _deCodeArray:Array = [];
 
-    private static var __instance:ResManager;
+    private static var __instance:NResManager;
 
     /***
      * 已经初始化完成的资源[具体对象]
@@ -59,9 +58,9 @@ public class ResManager {
      */
     private var _initList:Vector.<ResInfo>;
 
-    public function ResManager() {
+    public function NResManager() {
         if (__instance) {
-            throw new Error("ResManager is single!")
+            throw new Error("NResManager is single!")
             return;
         }
         _initedDic = new Dictionary(true);
@@ -69,20 +68,20 @@ public class ResManager {
         _initList = new Vector.<ResInfo>();
     }
 
-    public static function instance():ResManager {
+    public static function instance():NResManager {
         if (!__instance)
-            __instance = new ResManager();
+            __instance = new NResManager();
         return __instance;
     }
 
-    //-----------------------------------------------------------------------------
-    // Methods
-    //-----------------------------------------------------------------------------
-    rcant function load(url:Object, loadLevel:int = 0, onCompleteHandler:Function = null, onProgressHandler:Function = null, onErrorHandler:Function = null, isSave:Boolean = true):void {
-        toLoad(url, loadLevel, onCompleteHandler, onProgressHandler, onErrorHandler, isSave);
+    //-----------------------------------------
+    //Methods
+    //-----------------------------------------
+    rcant function load(url:Object, loadType:int = 0, loadLevel:int = 0, onCompleteHandler:Function = null, onProgressHandler:Function = null, onErrorHandler:Function = null, isSave:Boolean = true):void {
+        toLoad(url, loadType, loadLevel, onCompleteHandler, onProgressHandler, onErrorHandler, isSave);
     }
 
-    private function toLoad(url:Object, loadLevel:int, onCompleteHandler:Function, onProgressHandler:Function, onErrorHandler:Function, isSave:Boolean):void {
+    private function toLoad(url:Object, loadType:int, loadLevel:int, onCompleteHandler:Function, onProgressHandler:Function, onErrorHandler:Function, isSave:Boolean):void {
         var urlReq:URLRequest = urlHandle(url);
         if (!urlReq)
             return;
@@ -90,6 +89,7 @@ public class ResManager {
 
         var resData:ResInfo = new ResInfo();
         resData.url = rUrl;
+        resData.loadType = loadType;
         resData.loadLevel = loadLevel;
         resData.onCompleteHandle = onCompleteHandler;
         resData.onProgressHandle = onProgressHandler;
@@ -245,10 +245,6 @@ public class ResManager {
             }
             content = null;
         }
-//        var bi:ResInfo = _initedDic[url];
-//        if(bi){
-//            bi.dispose();
-//        }
         delete _initedDic[url];
         BinaryManager.instance().memoryCleanByUrl(url);
     }
