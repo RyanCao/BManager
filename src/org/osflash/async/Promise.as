@@ -38,14 +38,15 @@ package org.osflash.async
 		function fails(callback : Function) : Promise;
 
 		/**
-		 * Register a callback function which will be invoked as the Deferred process progresses during its PENDING
-		 * state.  The supplied function should expect zero or one argument (a Number between 0 and 1 which represents
-		 * the progress of the operation).  Note that callbacks registered after the Promise resolves, or rejects will
-		 * be executed immediatley with a value of 1 (representing complete).  Callbacks will be executed in the order 
-		 * they are supplied.
+         * 回调参数是数值
 		 */
 		function progresses(callback : Function) : Promise;
-		
+
+		/**
+         * 回调参数是数组
+		 */
+		function progressesArray(callback : Function) : Promise;
+
 		/**
 		 * Register a callback which will be executed after all other callbacks have been invoked.  Typically this 
 		 * is used to destroy or free the client.

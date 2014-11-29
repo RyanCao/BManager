@@ -34,17 +34,19 @@ public class BinaryTest extends TestSprite{
 //        "DSC_0222.JPG"
 //    ];
     private var assets:Array = [
-        ["swf/iconLoading.swf",LoadType.LIB],
-        ["itemIcons/2.png",LoadType.LIB],
-        ["itemIcons/3.png",LoadType.LIB],
-        ["itemIcons/5.png",LoadType.LIB],
-        ["itemIcons/7.png",LoadType.LIB],
-        ["swf/zidongxunlu.swf",LoadType.LIB],
-        ["monsters/lianyexiaoyao/encode/model.pad",LoadType.LIB],
-        ["interElements/textures/moxing_03_66.png",LoadType.LIB],
-        ["interElements/textures/xulie_25_25.png",LoadType.LIB],
+        ["itemIcons/7.png",LoadType.LIB,1],
+        ["swf/zidongxunlu.swf",LoadType.LIB,2],
+        ["swf/iconLoading.swf",LoadType.LIB,3],
+        ["monsters/lianyexiaoyao/encode/model.pad",LoadType.LIB,4],
+        ["interElements/textures/moxing_03_66.png",LoadType.LIB,5],
+        ["interElements/textures/xulie_25_25.png",LoadType.LIB,6],
+
         ["interElements/textures/moxing_03_16.png",LoadType.CORE_FILES],
-        ["interElements/textures/moxing_05_03.png",LoadType.OTHER]
+
+        ["interElements/textures/moxing_05_03.png",LoadType.OTHER,1],
+        ["itemIcons/3.png",LoadType.OTHER,4],
+        ["itemIcons/5.png",LoadType.OTHER,8],
+        ["itemIcons/2.png",LoadType.OTHER,10]
     ];
     private var h:uint = 0 ;
     private var lastTime:int = 0;

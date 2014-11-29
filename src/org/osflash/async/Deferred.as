@@ -21,7 +21,8 @@ package org.osflash.async
 		private const _completeListeners : Vector.<Function> = new Vector.<Function>();
 		private const _failListeners : Vector.<Function> = new Vector.<Function>();
 		protected const _progressListeners : Vector.<Function> = new Vector.<Function>();
-		
+		protected const _progressArrayListeners : Vector.<Function> = new Vector.<Function>();
+
 		private var _finalCallback : Function;
 		private var _state : uint = PENDING;
 		private var _outcome : *;
@@ -89,19 +90,17 @@ package org.osflash.async
 				_progressListeners[i](ratioComplete);
 			}
 		}
-		
+
 		/**
-		 * @param bytesLoaded
-		 * @param bytesTotal
-		 */		
-		public function progress2(bytesLoaded:Number, bytesTotal:Number) : void
+		 */
+		public function progressArray(datas:Array) : void
 		{
-			const len : uint = _progressListeners.length;
+			const len : uint = _progressArrayListeners.length;
 			for (var i : uint = 0; i < len; i++) {
-				_progressListeners[i](bytesLoaded,bytesTotal);
+                _progressArrayListeners[i](datas);
 			}
 		}
-		
+
 		/**
 		 * Aborts the deferred operation; none of the handlers bound to the Promise will be invoked; typically this
 		 * is used when the Deferred's host needs to cancel the operation.
@@ -147,7 +146,16 @@ package org.osflash.async
 			
 			return this;
 		}
-		
+
+		public function progressesArray(callback : Function) : Promise
+		{
+			if (_state == PENDING) {
+				_progressArrayListeners.push(callback);
+			}
+
+			return this;
+		}
+
 		public function thenFinally(callback : Function) : void
 		{
             if (_state == PENDING) {
@@ -163,6 +171,7 @@ package org.osflash.async
 			_completeListeners.length = 0;
 			_failListeners.length = 0;
 			_progressListeners.length = 0;
+            _progressArrayListeners.length = 0;
 		}
 
 		private function invokeFinalCallback() : void
