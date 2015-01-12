@@ -9,6 +9,8 @@ import flash.system.ApplicationDomain;
 import flash.system.LoaderContext;
 import flash.utils.ByteArray;
 
+import org.rcSpark.instManager.manager.InstManager;
+
 import org.rcSpark.rcant;
 import org.rcSpark.binaryManager.events.BinaryEvent;
 import org.rcSpark.binaryManager.manager.NBinaryManager;
@@ -24,7 +26,8 @@ public class LoaderDeferred extends Deferred {
     private var _url:String;
     private var _contentFormat:String;
     private var _info:*;
-    private var _bitmapData:BitmapData
+    private var _bitmapData:BitmapData;
+    private var _bitmap:Bitmap
 
     public function get url():String {
         return _url;
@@ -39,7 +42,14 @@ public class LoaderDeferred extends Deferred {
             loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, loadIOErrorHandler);
             loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loaderCompleteHandlerAsync);
             loader.unload();
-
+            loader = null ;
+        }
+        if (contentFormat == ResFormat.BITMAP && _bitmap) {
+            InstManager.instance().disposeOne(_url);
+            if(_bitmap.parent){
+                _bitmap.parent.removeChild(_bitmap);
+            }
+            _bitmap = null ;
         }
     }
 
@@ -62,6 +72,16 @@ public class LoaderDeferred extends Deferred {
             this._contentFormat = contentFormat
             this._url  =url;
             _inDomain = inDomain ;
+            if (contentFormat == ResFormat.BITMAP) {
+                var content:* = InstManager.instance().getInstData(_url);
+                if (content) {
+                    data = content;
+                    _bitmap = content as Bitmap;
+                    _bitmapData = _bitmap.bitmapData;
+                    resolve(this);
+                    return this;
+                }
+            }
             //BinaryManager.instance().rcant::load(url,0,onCompleteHandler,onProgressHandler,onErrorHandler);
             NBinaryManager.instance().rcant::load(url,type,loadLv,onCompleteHandlerAsync,onProgressHandler,onErrorHandler);
         }
@@ -72,7 +92,6 @@ public class LoaderDeferred extends Deferred {
         if (url != event.binaryInfo.url)
             return;
         //更新进度
-//		progress2(event.bytesLoaded,event.bytesTotal);
         progress(event.bytesLoaded / event.bytesTotal);
     }
 
@@ -87,10 +106,9 @@ public class LoaderDeferred extends Deferred {
     }
 
     protected function onCompleteHandler(event:BinaryEvent):void {
-        if (url != event.binaryInfo.url)
-            return;
         _success = true;
         var ba:ByteArray = event.binaryInfo.ba;
+        if(ba==null)return;
         ba.position = 0;
         switch (_contentFormat) {
             case ResFormat.BINARY :
@@ -144,7 +162,8 @@ public class LoaderDeferred extends Deferred {
         if (ResFormat.BITMAP == contentFormat) {
 
             if (_loader.content is Bitmap) {
-                if (_bitmapData == null)_bitmapData = Bitmap(_loader.content).bitmapData;
+                _bitmap = InstManager.instance().initData(_url, Bitmap(_loader.content).bitmapData, ResFormat.BITMAP);
+                _bitmapData = _bitmap.bitmapData;
             }
             else if (_loader.content is MovieClip) {
                 if (_bitmapData == null) {
@@ -154,7 +173,6 @@ public class LoaderDeferred extends Deferred {
                     _bitmapData = bitmapData;
                 }
             }
-
         } else if (ResFormat.LOADER == contentFormat) {
             data = _loader.content
         }
@@ -201,7 +219,8 @@ public class LoaderDeferred extends Deferred {
     public function set info(value:*):void {
         _info = value;
     }
-
-
+    public function get bitmap():Bitmap {
+        return _bitmap;
+    }
 }
 }

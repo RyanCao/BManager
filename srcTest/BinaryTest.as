@@ -23,7 +23,6 @@ use namespace rcant;
 [SWF(width=700,height=400)]
 public class BinaryTest extends TestSprite{
 //    private var cdn:String = "d:/app/nginx-1.7.7/html/";
-
 //    private var cdn:String = "http://localhost/";
     private var cdn:String = "http://sssj.static.xyimg.net/test/resource_stone/prepare/resource_stone/zh_cn/assets/";
 //    private var cdn:String = "ftp://172.27.108.2:2121/Tencent/QQfile_recv/";
@@ -34,17 +33,17 @@ public class BinaryTest extends TestSprite{
 //        "DSC_0222.JPG"
 //    ];
     private var assets:Array = [
-        ["monsters/lianyexiaoyao/encode/model.pad",LoadType.LIB,4],
-        ["interElements/textures/moxing_03_66.png",LoadType.LIB,5],
-        ["interElements/textures/xulie_25_25.png",LoadType.LIB,6],
-        ["swf/zidongxunlu.swf",LoadType.LIB,2],
-        ["itemIcons/7.png",LoadType.LIB,1],
-        ["swf/iconLoading.swf",LoadType.LIB,3],
-        ["interElements/textures/moxing_03_16.png",LoadType.CORE_FILES],
-        ["itemIcons/3.png",LoadType.OTHER,4],
-        ["itemIcons/5.png",LoadType.OTHER,8],
-        ["interElements/textures/moxing_05_03.png",LoadType.OTHER,1],
-        ["itemIcons/2.png",LoadType.OTHER,10]
+        ["monsters/lianyexiaoyao/encode/model.pad",LoadType.LIB,4,ResFormat.BINARY],
+        ["interElements/textures/moxing_03_66.png",LoadType.LIB,5,ResFormat.BITMAP],
+        ["interElements/textures/xulie_25_25.png",LoadType.LIB,6,ResFormat.BITMAP],
+        ["swf/zidongxunlu.swf",LoadType.LIB,2,ResFormat.BINARY],
+        ["itemIcons/7.png",LoadType.LIB,1,ResFormat.BITMAP],
+        ["swf/iconLoading.swf",LoadType.LIB,3,ResFormat.BINARY],
+        ["interElements/textures/moxing_03_16.png",LoadType.CORE_FILES,1,ResFormat.BITMAP],
+        ["itemIcons/3.png",LoadType.OTHER,4,ResFormat.BITMAP],
+        ["itemIcons/5.png",LoadType.OTHER,8,ResFormat.BITMAP],
+        ["interElements/textures/moxing_05_03.png",LoadType.OTHER,1,ResFormat.BITMAP],
+        ["itemIcons/2.png",LoadType.OTHER,10,ResFormat.BITMAP]
     ];
     private var h:uint = 0 ;
     private var lastTime:int = 0;

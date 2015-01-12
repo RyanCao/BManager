@@ -249,7 +249,7 @@ public class BinaryLoader extends BaseLoader {
         }
     }
 
-    protected function onCompleteHandler(evt:Event):void {
+    override protected function onCompleteHandler(evt:Event):void {
         var loader:URLStream = _loader as URLStream;
         if (evt.type == Event.COMPLETE) {
 
